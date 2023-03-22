@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Diagnostics;
 
 namespace Lr1
 {
@@ -33,6 +34,45 @@ namespace Lr1
             );
             Console.WriteLine(magazine);
             Console.WriteLine();
+
+            //Cравнить время, необходимое для выполнения операций с элементами массивов
+            var linearArray = new Article[1000000];
+            var rectArray = new Article[1000,1000];
+            var jaggedArray = new Article[1000][];
+ 
+            for (int i = 0; i < jaggedArray.Length; i++)
+                jaggedArray[i] = new Article[1000];
+ 
+            //test1
+            var sw = Stopwatch.StartNew();
+ 
+            for (int i = 0; i < 1000000; i++)
+                linearArray[i] = null;
+ 
+            sw.Stop();
+            Console.WriteLine(sw.Elapsed);
+ 
+            //test2
+            sw = Stopwatch.StartNew();
+ 
+            for (int i = 0; i < 1000; i++)
+            for (int j = 0; j < 1000; j++)
+                rectArray[i, j] = null;
+ 
+            sw.Stop();
+            Console.WriteLine(sw.Elapsed);
+ 
+            //test3
+            sw = Stopwatch.StartNew();
+ 
+            for (int i = 0; i < 1000; i++)
+            for (int j = 0; j < 1000; j++)
+                jaggedArray[i][j] = null;
+ 
+            sw.Stop();
+            Console.WriteLine(sw.Elapsed);
+ 
+            Console.ReadKey();
         }
     }
     class Person
