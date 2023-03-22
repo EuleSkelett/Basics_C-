@@ -1,0 +1,15 @@
+D:\NODE-PRACTICE\C#\Prakt\Lr1\bin\Debug\net6.0\Lr1.exe
+D:\NODE-PRACTICE\C#\Prakt\Lr1\bin\Debug\net6.0\Lr1.deps.json
+D:\NODE-PRACTICE\C#\Prakt\Lr1\bin\Debug\net6.0\Lr1.runtimeconfig.json
+D:\NODE-PRACTICE\C#\Prakt\Lr1\bin\Debug\net6.0\Lr1.dll
+D:\NODE-PRACTICE\C#\Prakt\Lr1\bin\Debug\net6.0\Lr1.pdb
+D:\NODE-PRACTICE\C#\Prakt\Lr1\obj\Debug\net6.0\Lr1.csproj.AssemblyReference.cache
+D:\NODE-PRACTICE\C#\Prakt\Lr1\obj\Debug\net6.0\Lr1.GeneratedMSBuildEditorConfig.editorconfig
+D:\NODE-PRACTICE\C#\Prakt\Lr1\obj\Debug\net6.0\Lr1.AssemblyInfoInputs.cache
+D:\NODE-PRACTICE\C#\Prakt\Lr1\obj\Debug\net6.0\Lr1.AssemblyInfo.cs
+D:\NODE-PRACTICE\C#\Prakt\Lr1\obj\Debug\net6.0\Lr1.csproj.CoreCompileInputs.cache
+D:\NODE-PRACTICE\C#\Prakt\Lr1\obj\Debug\net6.0\Lr1.dll
+D:\NODE-PRACTICE\C#\Prakt\Lr1\obj\Debug\net6.0\refint\Lr1.dll
+D:\NODE-PRACTICE\C#\Prakt\Lr1\obj\Debug\net6.0\Lr1.pdb
+D:\NODE-PRACTICE\C#\Prakt\Lr1\obj\Debug\net6.0\Lr1.genruntimeconfig.cache
+D:\NODE-PRACTICE\C#\Prakt\Lr1\obj\Debug\net6.0\ref\Lr1.dll
