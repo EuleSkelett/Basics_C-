@@ -1,5 +1,6 @@
 ﻿using System;
-using System.Linq;
+using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace Lr1
@@ -75,7 +76,7 @@ namespace Lr1
             Console.ReadKey();
         }
     }
-    class Person
+    class Person 
     {
         private string name;
         private string secondname;
@@ -109,11 +110,67 @@ namespace Lr1
             => $"{Name}{Secondname} день роджения: {Date}";
         public string ToShortString()
             => $"{Name}{Secondname}";
+        //переопределить метод virtial bool Equals (object obj)
+        public override bool Equals(object? obj)
+        {
+            return base.Equals(obj);
+        }
+        //переопределить виртуальный метод int GetHashCode()
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
+        //определить операции == и != так, чтобы равенство объектов типа Person 
+        //трактовалось как совпадение всех данных объектов, 
+        //а не ссылок на объекты Person
+        public static bool operator ==(Person p1, Person p2)
+ 
+        {
+ 
+            bool result = false;
+ 
+            if (p1.Name.Equals(p2.Name))
+ 
+                if (p1.Secondname.Equals(p2.Secondname))
+ 
+                    if (p1.Date.Equals(p2.Date))
+ 
+                        result = true;
+ 
+            return result;
+ 
+        }
+        public static bool operator !=(Person p1, Person p2)
+ 
+        {
+ 
+            bool result = true;
+ 
+            if (p1.Name.Equals(p2.Name))
+ 
+                if (p1.Secondname.Equals(p2.Secondname))
+ 
+                    if (p1.Date.Equals(p2.Date))
+ 
+                        result = false;
+ 
+            return result;
+ 
+        }
+        public object DeepCopy()
+ 
+        {
+ 
+            return new Person(Name, Secondname, Date);
+ 
+            
+ 
+        }
     }
     enum Frequency { Weekly, Monthly, Yearly }
 
     //Опеделить класс Article, который имеет три открытых автореализуемых свойства, доступных для чтения и записи
-    class Article
+    class Article : IRateAndCopy
     {
         public Person Author { get; set; }
         public string Title { get; set; }
@@ -132,14 +189,146 @@ namespace Lr1
             : this(new Person(), "Без названия", 0)
         {
         }
+        double IRateAndCopy.Top // реализовать интерфейс IRateAndCopy
+        {
+            get
+            {
+                return Top;
+            }
+        }
+        public Person GetSetAuthor
+        {
+            get
+            {
+                return Author;
+            }
+            set
+            {
+                Author = value;
+            }
+        }
+        public double SetTop
+        {
+            set
+            {
+                Top = value;
+            }
+        }
+        public string GetSetTitle
+        {
+            get
+            {
+                return Title;
+            }
+            set
+            {
+                Title = value;
+            }
+        } 
+        public Article(double Top)
+        {
+            this.Top = Top;
+        }
 
         // перегруженная (override) версия виртуального метода string ToString()
         public override string ToString()
-             => $"${Title} с рейтингом {Top} от {Author}";
+             => $"{Title} с рейтингом {Top} от {Author}";
+
+        public object DeepCopy()
+        {
+            return new Article(Top);
+        }
     }
-    class Magazine
+    class Edition
+    {
+        protected string editionName; // защищенное(protected) поле типа string c названием издания
+        protected DateTime release; // защищенное поле типа DateTime c датой выхода издания
+        protected int count; // защищенное поле типа int с тиражом издания
+        public Edition(string editionName, DateTime release, int count) 
+        // конструктор с параметрами типа string, DateTime, 
+        //int для инициализации соответствующих полей класса
+        {
+            this.editionName = editionName;
+            this.release = release;
+            this.count = count;
+        }
+        public Edition() // конструктор без параметров для инициализации по умолчанию;
+        {
+            editionName = "ABC";
+            release = new DateTime(2008, 10, 10);
+            count = 10000;
+        }
+        public string GetSetEditionName // свойство типа string для доступа к полю с названием журнала
+        {
+            get
+            {
+                return editionName;
+            }
+            set
+            {
+                editionName = value;
+            }
+        }
+        public DateTime GetSetRelease // свойство типа DateTime для доступа к полю c датой выхода журнала
+        {
+            get
+            {
+                return release;
+            }
+            set
+            {
+                release = value;
+            }
+        }
+        public int GetSetCount // свойство типа int для доступа к полю с тиражом журнала
+        {
+            get
+            {
+                return count;
+            }
+            set
+            {
+                if (value < 0)
+                    throw new ArgumentOutOfRangeException("Count cannot be negative");
+                else
+                    count = value;
+            }
+        }
+        public virtual object DeepCopy() // виртуальный метод object DeepCopy()
+        {
+            return new Edition(editionName, release, count);
+        }
+        public override bool Equals(object obj) // переопределить метод Equals (object obj)
+        {
+            Edition objEdition = obj as Edition;
+            return editionName == objEdition.editionName && release == objEdition.release && count == objEdition.count;            
+        }
+        public static bool operator ==(Edition ed1, Edition ed2) // определить операцию ==
+        {
+            return ed1.Equals(ed2);
+        }
+        public static bool operator !=(Edition ed1, Edition ed2) // определить операцию !=
+        {
+            return !ed1.Equals(ed2);
+        }
+        public override int GetHashCode() // виртуальный метод int GetHashCode()
+        {
+            int hashcode = 0;
+            Char[] charArr = (editionName + count + release.Year + release.Month + release.Day).ToCharArray();
+            foreach (char ch in charArr)
+                hashcode += Convert.ToInt32(ch);
+            return hashcode;
+        }
+        public override string ToString() // перегруженная версия виртуального метода string ToString() для формирования строки со значениями всех полей класса
+        {
+            return String.Format("Edition name is: {0}\nRelease date: {1}\nEdition count: {2}", editionName, release, count);
+        }
+    }
+
+    class Magazine : Edition, IRateAndCopy
     {
         private string title; //закрытое поле типа string c названием журнала
+        private ArrayList Editors = new ArrayList(); // закрытое поле типа System.Collections.ArrayList со списком редакторов журнала (объектов типа Person).
         private Frequency frequency; //закрытое поле типа Frequency с информацией о периодичности выхода журнала
         private DateTime publishDate; //закрытое поле типа DateTime c датой выхода журнала
         private int circulation; //закрытое поле типа int с тиражом журнала
@@ -162,6 +351,7 @@ namespace Lr1
 
         //В классе Magazine определить свойства c методами get и set:
         //private string title;// Свойство типа string для доступа к полю с названием журнала
+        public ArrayList ListOfArticles => Articles; // свойство типа System.Collections.ArrayList для доступа к полю со списком статей в журнале
         public string Title
         {
             get => title;
@@ -191,7 +381,7 @@ namespace Lr1
             get => articles;
             set => articles = value;
         }
-        public double GetAvgRating()
+        public double GetAvgTop()
             => articles?.Average(x => x.Top) ?? 0;
         //Cвойство типа double ( только с методом get), в котором вычисляется среднее значение рейтинга в списке статей
         public bool this[Frequency frequency]
@@ -227,7 +417,12 @@ namespace Lr1
             + $"\nFrequency = {Frequency}"
             + $"\nPublishDate = {PublishDate}"
             + $"\nCirculation = {Circulation}"
-            + $"\nAvg rating = {GetAvgRating()}";
+            + $"\nAvg Top = {GetAvgTop()}";
 
+    }
+    interface IRateAndCopy
+    { 
+        double Top { get;}
+        object DeepCopy();
     }
 }
