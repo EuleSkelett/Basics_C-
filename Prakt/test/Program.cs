@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
- 
+
 namespace LR2
 {
     interface IRateAndCopy // Определить интерфейс IRateAndCopy
@@ -13,32 +13,32 @@ namespace LR2
     enum Frequency { Weekly, Monthly, Yearly }
     class Program
     {
- 
+
         static void Main(string[] args)
         {
             Console.WriteLine("1"); // Создать два объекта типа Edition с совпадающими данными и проверить, что ссылки на объекты не равны, а объекты равны, вывести значения хэш- кодов для объектов.
-            Edition edition1 = new Edition("HAZI", new DateTime(2000, 8, 25), 10000); 
+            Edition edition1 = new Edition("HAZI", new DateTime(2000, 8, 25), 10000);
             Edition edition2 = new Edition("HAZI", new DateTime(2000, 8, 25), 10000);
             Console.WriteLine(edition1.Equals(edition2));
             Console.WriteLine(String.Format("Edition1 hashcode: {0}\nEdition2 hashcode: {1}", edition1.GetHashCode(), edition2.GetHashCode()));
             Console.WriteLine();
- 
+
             Console.WriteLine("2"); // В блоке try/catch присвоить свойству с тиражом издания некорректное значение, в обработчике исключения вывести сообщение, переданное через объект-исключение.
-            try 
+            try
             {
                 edition1.GetSetCount = -1;
-            } 
+            }
             catch (ArgumentOutOfRangeException)
             {
                 Console.WriteLine("Incorrect value");
             }
             Console.WriteLine();
- 
+
             Console.WriteLine("3"); // Создать объект типа Magazine, добавить элементы в списки статей и редакторов журнала и вывести данные объекта Magazine
-            Magazine magazine = new Magazine(); 
+            Magazine magazine = new Magazine();
             magazine.AddEditors(
-                new Person("Albert", "Einstein", new DateTime(1879, 3, 14)), 
-                new Person("Isaac", "Newton", new DateTime(1642, 12, 25)), 
+                new Person("Albert", "Einstein", new DateTime(1879, 3, 14)),
+                new Person("Isaac", "Newton", new DateTime(1642, 12, 25)),
                 new Person("Charles", "Darwin", new DateTime(1809, 2, 12)),
                 new Person("Nikola", "Tesla", new DateTime(1856, 7, 10)));
             magazine.AddArticles(
@@ -48,11 +48,11 @@ namespace LR2
                 new Article(new Person("Nikola", "Tesla", new DateTime(1856, 7, 10)), "Wizard of the Industrial Revolution", 5));
             Console.WriteLine(magazine.ToString());
             Console.WriteLine();
- 
+
             Console.WriteLine("4");
             Console.WriteLine(magazine.GetSetEditionType);
             Console.WriteLine();
- 
+
             Console.WriteLine("5"); // С помощью метода DeepCopy() создать полную копию объекта Magazine. Изменить данные в исходном объекте Magazine и вывести копию и исходный объект, полная копия исходного объекта должна остаться без изменений.
             Magazine magazine1 = (Magazine)magazine.DeepCopy();
             magazine1.GetSetEditionName = "MCMK";
@@ -61,24 +61,24 @@ namespace LR2
             Console.WriteLine(magazine.ToShortString());
             Console.WriteLine(magazine1.ToShortString());
             Console.WriteLine();
- 
+
             Console.WriteLine(6); // С помощью оператора foreach для итератора с параметром типа double вывести список всех статей с рейтингом больше некоторого заданного значения
             foreach (Article article in magazine.HigherRating(4.5))
                 Console.WriteLine(article);
             Console.WriteLine();
- 
+
             Console.WriteLine(7); // С помощью оператора foreach для итератора с параметром типа string вывести список статей, в названии которых есть заданная строка
             foreach (Article article in magazine.SubstrArticle("Who"))
                 Console.WriteLine(article);
         }
- 
+
     }
     class Person // новые версии классов Person
     {
         private string firstname; // закрытое поле типа string, в котором хранится имя
         private string lastname; // закрытое поле типа string, в котором хранится фамилия
         private DateTime birthDate; // закрытое поле типа System.DateTime для даты рождения
- 
+
         public Person(string firstname, string lastname, DateTime birthDate) // конструктор c тремя параметрами типа string, string, DateTime для инициализации всех полей класса
         {
             this.firstname = firstname;
@@ -118,7 +118,7 @@ namespace LR2
         private Person author;
         private string title;
         private double Rating;
- 
+
         public Article(Person author, string title, double Rating)
         {
             this.author = author;
@@ -240,7 +240,7 @@ namespace LR2
         public override bool Equals(object obj) // переопределить метод Equals (object obj)
         {
             Edition objEdition = obj as Edition;
-            return editionName == objEdition.editionName && release == objEdition.release && count == objEdition.count;            
+            return editionName == objEdition.editionName && release == objEdition.release && count == objEdition.count;
         }
         public static bool operator ==(Edition ed1, Edition ed2) // определить операцию ==
         {
@@ -269,7 +269,7 @@ namespace LR2
         private ArrayList Editors = new ArrayList(); // закрытое поле типа System.Collections.ArrayList со списком редакторов журнала (объектов типа Person).
         private ArrayList Articles = new ArrayList(); // закрытое поле типа System.Collections.ArrayList, в котором хранится список статей в журнале (объектов типа Article).
         private double magazineRating; // закрытое поле типо string с рейтингом журнала
- 
+
         public Magazine(string editionName, Frequency period, DateTime release, int count) // конструктор с параметрами типа string, Frequency, DateTime, int для инициализации соответствующих полей класса
         {
             this.editionName = editionName;
@@ -357,7 +357,7 @@ namespace LR2
             foreach (Article article in Articles)
                 if (article.GetSetTitle.Contains(subStr))
                     yield return article;
-        } 
- 
+        }
+
     }
 }

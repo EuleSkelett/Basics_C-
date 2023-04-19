@@ -2,241 +2,182 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
-
-namespace Lr1
+ 
+namespace LR2
 {
-    class Program
+    interface IRateAndCopy // Определить интерфейс IRateAndCopy
     {
-        static void Main(string[] args)
-        {
-            var magazine = new Magazine("Тест", Frequency.Weekly, DateTime.Now, 2);
-            Console.WriteLine(magazine.ToShortString());
-            Console.WriteLine();
-
-            Console.WriteLine(magazine[Frequency.Weekly]);
-            Console.WriteLine(magazine[Frequency.Monthly]);
-            Console.WriteLine(magazine[Frequency.Yearly]);
-            Console.WriteLine();
-            magazine.Title = "Тест 2";
-            magazine.Frequency = Frequency.Yearly;
-            magazine.PublishDate = magazine.PublishDate.AddDays(-1);
-            magazine.Circulation = 3;
-            magazine.Articles = new Article[]
-            {
-                new Article(new Person("Семен", "Куринов", new DateTime(2001, 6, 10)), "Статья 1", 1 ),
-                new Article(new Person("Валера", "Рукин", new DateTime(2001, 7, 20)),"Статья 2", 2 )
-            };
-            Console.WriteLine(magazine);
-            Console.WriteLine();
-
-            magazine.AddArticles(
-                new Article(new Person("Алекс", "Свон", new DateTime(2000, 4, 10)), "Статья 3", 3),
-                new Article(new Person("Алла", "Теник", new DateTime(2000, 8, 15)), "Статья 4", 4)
-            );
-            Console.WriteLine(magazine);
-            Console.WriteLine();
-
-            //Cравнить время, необходимое для выполнения операций с элементами массивов
-            var linearArray = new Article[1000000];
-            var rectArray = new Article[1000, 1000];
-            var jaggedArray = new Article[1000][];
-
-            for (int i = 0; i < jaggedArray.Length; i++)
-                jaggedArray[i] = new Article[1000];
-
-            //test1
-            var sw = Stopwatch.StartNew();
-
-            for (int i = 0; i < 1000000; i++)
-                linearArray[i] = null;
-
-            sw.Stop();
-            Console.WriteLine(sw.Elapsed);
-
-            //test2
-            sw = Stopwatch.StartNew();
-
-            for (int i = 0; i < 1000; i++)
-                for (int j = 0; j < 1000; j++)
-                    rectArray[i, j] = null;
-
-            sw.Stop();
-            Console.WriteLine(sw.Elapsed);
-
-            //test3
-            sw = Stopwatch.StartNew();
-
-            for (int i = 0; i < 1000; i++)
-                for (int j = 0; j < 1000; j++)
-                    jaggedArray[i][j] = null;
-
-            sw.Stop();
-            Console.WriteLine(sw.Elapsed);
-
-            Console.ReadKey();
-        }
-    }
-    class Person 
-    {
-        private string name;
-        private string secondname;
-        private DateTime date;
-
-        public Person(string name, string secondname, System.DateTime date)
-        {
-            Name = name;
-            Secondname = secondname;
-            Date = date;
-        }
-
-        public Person()
-        { }
-        public string Name { get; set; }
-        public string Secondname { get; set; }
-        DateTime Date { get; set; }
-        int intstddate
-        {
-            get
-            {
-                return Convert.ToInt32(date);
-            }
-
-            set
-            {
-                date = Convert.ToDateTime(value);
-            }
-        }
-        public override string ToString()
-            => $"{Name}{Secondname} день роджения: {Date}";
-        public string ToShortString()
-            => $"{Name}{Secondname}";
-        //переопределить метод virtial bool Equals (object obj)
-        public override bool Equals(object? obj)
-        {
-            return base.Equals(obj);
-        }
-        //переопределить виртуальный метод int GetHashCode()
-        public override int GetHashCode()
-        {
-            return base.GetHashCode();
-        }
-        //определить операции == и != так, чтобы равенство объектов типа Person 
-        //трактовалось как совпадение всех данных объектов, 
-        //а не ссылок на объекты Person
-        public static bool operator ==(Person p1, Person p2)
- 
-        {
- 
-            bool result = false;
- 
-            if (p1.Name.Equals(p2.Name))
- 
-                if (p1.Secondname.Equals(p2.Secondname))
- 
-                    if (p1.Date.Equals(p2.Date))
- 
-                        result = true;
- 
-            return result;
- 
-        }
-        public static bool operator !=(Person p1, Person p2)
- 
-        {
- 
-            bool result = true;
- 
-            if (p1.Name.Equals(p2.Name))
- 
-                if (p1.Secondname.Equals(p2.Secondname))
- 
-                    if (p1.Date.Equals(p2.Date))
- 
-                        result = false;
- 
-            return result;
- 
-        }
-        public object DeepCopy()
- 
-        {
- 
-            return new Person(Name, Secondname, Date);
- 
-            
- 
-        }
+        double Rating { get; }
+        object DeepCopy();
     }
     enum Frequency { Weekly, Monthly, Yearly }
-
-    //Опеделить класс Article, который имеет три открытых автореализуемых свойства, доступных для чтения и записи
-    class Article : IRateAndCopy
+    class Program
     {
-        public Person Author { get; set; }
-        public string Title { get; set; }
-        public double Top { get; set; }
-
-        //Конструктор с параметрами типа Person, string, double для инициализации всех свойств класса
-        public Article(Person author, string title, double top)
+ 
+        static void Main(string[] args)
         {
-            Author = author;
-            Title = title;
-            Top = top;
+            Console.WriteLine("1"); // Создать два объекта типа Edition с совпадающими данными и проверить, что ссылки на объекты не равны, а объекты равны, вывести значения хэш- кодов для объектов.
+            Edition edition1 = new Edition("HAZI", new DateTime(2000, 8, 25), 10000); 
+            Edition edition2 = new Edition("HAZI", new DateTime(2000, 8, 25), 10000);
+            Console.WriteLine(edition1.Equals(edition2));
+            Console.WriteLine(String.Format("Edition1 hashcode: {0}\nEdition2 hashcode: {1}", edition1.GetHashCode(), edition2.GetHashCode()));
+            Console.WriteLine();
+ 
+            Console.WriteLine("2"); // В блоке try/catch присвоить свойству с тиражом издания некорректное значение, в обработчике исключения вывести сообщение, переданное через объект-исключение.
+            try 
+            {
+                edition1.GetSetCount = -1;
+            } 
+            catch (ArgumentOutOfRangeException)
+            {
+                Console.WriteLine("Incorrect value");
+            }
+            Console.WriteLine();
+ 
+            Console.WriteLine("3"); // Создать объект типа Magazine, добавить элементы в списки статей и редакторов журнала и вывести данные объекта Magazine
+            Magazine magazine = new Magazine(); 
+            magazine.AddEditors(
+                new Person("Albert", "Einstein", new DateTime(1879, 3, 14)), 
+                new Person("Isaac", "Newton", new DateTime(1642, 12, 25)), 
+                new Person("Charles", "Darwin", new DateTime(1809, 2, 12)),
+                new Person("Nikola", "Tesla", new DateTime(1856, 7, 10)));
+            magazine.AddArticles(
+                new Article(new Person("Albert", "Einstein", new DateTime(1879, 3, 14)), "The Whole Package", 5),
+                new Article(new Person("Isaac", "Newton", new DateTime(1642, 12, 25)), "The Man Who Defined Science on a Bet", 4.8),
+                new Article(new Person("Charles", "Darwin", new DateTime(1809, 2, 12)), "Delivering the Evolutionary Gospel", 4.5),
+                new Article(new Person("Nikola", "Tesla", new DateTime(1856, 7, 10)), "Wizard of the Industrial Revolution", 5));
+            Console.WriteLine(magazine.ToString());
+            Console.WriteLine();
+ 
+            Console.WriteLine("4");
+            Console.WriteLine(magazine.GetSetEditionType);
+            Console.WriteLine();
+ 
+            Console.WriteLine("5"); // С помощью метода DeepCopy() создать полную копию объекта Magazine. Изменить данные в исходном объекте Magazine и вывести копию и исходный объект, полная копия исходного объекта должна остаться без изменений.
+            Magazine magazine1 = (Magazine)magazine.DeepCopy();
+            magazine1.GetSetEditionName = "MCMK";
+            magazine1.GetSetRelease = new DateTime(2020, 1, 1);
+            magazine1.GetSetCount = 0;
+            Console.WriteLine(magazine.ToShortString());
+            Console.WriteLine(magazine1.ToShortString());
+            Console.WriteLine();
+ 
+            Console.WriteLine(6); // С помощью оператора foreach для итератора с параметром типа double вывести список всех статей с рейтингом больше некоторого заданного значения
+            foreach (Article article in magazine.HigherRating(4.5))
+                Console.WriteLine(article);
+            Console.WriteLine();
+ 
+            Console.WriteLine(7); // С помощью оператора foreach для итератора с параметром типа string вывести список статей, в названии которых есть заданная строка
+            foreach (Article article in magazine.SubstrArticle("Who"))
+                Console.WriteLine(article);
         }
-
-        //Конструктор без параметров
+ 
+    }
+    class Person // новые версии классов Person
+    {
+        private string firstname; // закрытое поле типа string, в котором хранится имя
+        private string lastname; // закрытое поле типа string, в котором хранится фамилия
+        private DateTime birthDate; // закрытое поле типа System.DateTime для даты рождения
+ 
+        public Person(string firstname, string lastname, DateTime birthDate) // конструктор c тремя параметрами типа string, string, DateTime для инициализации всех полей класса
+        {
+            this.firstname = firstname;
+            this.lastname = lastname;
+            this.birthDate = birthDate;
+        }
+        public string GetFirstName => firstname;
+        public string GetLastName => lastname;
+        public override bool Equals(object obj) // переопределить (override) виртуальный метод bool Equals (object obj);
+        {
+            Person objPerson = obj as Person;
+            return firstname == objPerson.firstname && lastname == objPerson.lastname && birthDate == objPerson.birthDate;
+        }
+        public static bool operator ==(Person p1, Person p2) // определить операцию ==
+        {
+            return p1.Equals(p2);
+        }
+        public static bool operator !=(Person p1, Person p2) // определить операцию !=
+        {
+            return !p1.Equals(p2);
+        }
+        public override int GetHashCode() // Переопределение виртуального метода int GetHashCode()
+        {
+            int hashcode = 0;
+            char[] charArr = (firstname + lastname + birthDate.Day + birthDate.Month + birthDate.Year).ToCharArray();
+            foreach (char ch in charArr)
+                hashcode += Convert.ToInt32(ch);
+            return hashcode;
+        }
+        public virtual object DeepCopy() // определить метод object DeepCopy()
+        {
+            return new Person(firstname, lastname, birthDate);
+        }
+    }
+    class Article : IRateAndCopy // новые версии классов Article
+    {
+        private Person author;
+        private string title;
+        private double Rating;
+ 
+        public Article(Person author, string title, double Rating)
+        {
+            this.author = author;
+            this.title = title;
+            this.Rating = Rating;
+        }
         public Article()
-            : this(new Person(), "Без названия", 0)
         {
+            author = new Person("Marsel", "Nazirov", new DateTime(2000, 8, 25));
+            title = "Kotlin";
+            Rating = 5;
         }
-        double IRateAndCopy.Top // реализовать интерфейс IRateAndCopy
+        double IRateAndCopy.Rating // реализовать интерфейс IRateAndCopy
         {
             get
             {
-                return Top;
+                return Rating;
             }
         }
         public Person GetSetAuthor
         {
             get
             {
-                return Author;
+                return author;
             }
             set
             {
-                Author = value;
+                author = value;
             }
         }
-        public double SetTop
+        public double SetRating
         {
             set
             {
-                Top = value;
+                Rating = value;
             }
         }
         public string GetSetTitle
         {
             get
             {
-                return Title;
+                return title;
             }
             set
             {
-                Title = value;
+                title = value;
             }
-        } 
-        public Article(double Top)
-        {
-            this.Top = Top;
         }
-
-        // перегруженная (override) версия виртуального метода string ToString()
-        public override string ToString()
-             => $"{Title} с рейтингом {Top} от {Author}";
-
-        public object DeepCopy()
+        public Article(double Rating)
         {
-            return new Article(Top);
+            this.Rating = Rating;
+        }
+        public object DeepCopy() // определить метод object DeepCopy()
+        {
+            return new Article(Rating);
+        }
+        public override string ToString()
+        {
+            return String.Format("Title: {0}, Rating: {1}", title, Rating);
         }
     }
     class Edition
@@ -244,9 +185,7 @@ namespace Lr1
         protected string editionName; // защищенное(protected) поле типа string c названием издания
         protected DateTime release; // защищенное поле типа DateTime c датой выхода издания
         protected int count; // защищенное поле типа int с тиражом издания
-        public Edition(string editionName, DateTime release, int count) 
-        // конструктор с параметрами типа string, DateTime, 
-        //int для инициализации соответствующих полей класса
+        public Edition(string editionName, DateTime release, int count) // конструктор с параметрами типа string, DateTime, int для инициализации соответствующих полей класса
         {
             this.editionName = editionName;
             this.release = release;
@@ -324,105 +263,101 @@ namespace Lr1
             return String.Format("Edition name is: {0}\nRelease date: {1}\nEdition count: {2}", editionName, release, count);
         }
     }
-
-    class Magazine : Edition, IRateAndCopy
+    class Magazine : Edition, IRateAndCopy //новые версии классов Magazine
     {
-        private string title; //закрытое поле типа string c названием журнала
+        private Frequency period; // закрытое поле типа Frequency с информацией о периодичности выхода журнала
         private ArrayList Editors = new ArrayList(); // закрытое поле типа System.Collections.ArrayList со списком редакторов журнала (объектов типа Person).
-        private Frequency frequency; //закрытое поле типа Frequency с информацией о периодичности выхода журнала
-        private DateTime publishDate; //закрытое поле типа DateTime c датой выхода журнала
-        private int circulation; //закрытое поле типа int с тиражом журнала
-        private Article[] articles; //закрытое поле типа Article [] со списком статей в журнале
-
-        //конструктор с параметрами типа string, Frequency, DateTime, int для инициализации соответствующих полей класса
-
-        public Magazine(string title, Frequency frequency, DateTime publishDate, int circulation)
+        private ArrayList Articles = new ArrayList(); // закрытое поле типа System.Collections.ArrayList, в котором хранится список статей в журнале (объектов типа Article).
+        private double magazineRating; // закрытое поле типо string с рейтингом журнала
+ 
+        public Magazine(string editionName, Frequency period, DateTime release, int count) // конструктор с параметрами типа string, Frequency, DateTime, int для инициализации соответствующих полей класса
         {
-            this.title = title;
-            this.frequency = frequency;
-            this.publishDate = publishDate;
-            this.circulation = circulation;
+            this.editionName = editionName;
+            this.period = period;
+            this.release = release;
+            this.count = count;
         }
-
-        //конструктор без параметров, инициализирующий поля класса значениями по умолчанию
-        private Magazine()
+        public Magazine() // конструктор без параметров для инициализации по умолчанию
         {
+            editionName = "ABC";
+            period = Frequency.Monthly;
+            release = new DateTime(2008, 10, 10);
+            count = 10000;
+            Articles.Add(new Article());
         }
-
-        //В классе Magazine определить свойства c методами get и set:
-        //private string title;// Свойство типа string для доступа к полю с названием журнала
         public ArrayList ListOfArticles => Articles; // свойство типа System.Collections.ArrayList для доступа к полю со списком статей в журнале
-        public string Title
+        public double SrRating // свойство типа double (только с методом get), в котором вычисляется среднее значение рейтинга статей в журнале
         {
-            get => title;
-            set => title = value;
-        }
-
-        public Frequency Frequency
-        {
-            get => frequency;
-            set => frequency = value;
-        }
-
-        public DateTime PublishDate
-        {
-            get => publishDate;
-            set => publishDate = value;
-        }
-
-        public int Circulation
-        {
-            get => circulation;
-            set => circulation = value;
-        }
-
-        public Article[] Articles
-        {
-            get => articles;
-            set => articles = value;
-        }
-        public double GetAvgTop()
-            => articles?.Average(x => x.Top) ?? 0;
-        //Cвойство типа double ( только с методом get), в котором вычисляется среднее значение рейтинга в списке статей
-        public bool this[Frequency frequency]
-        {
-            get => Frequency == frequency;
-        }
-        public void AddArticles(params Article[] newArticles)
-        {
-            if (newArticles?.Length == 0)
+            get
             {
-                return;
+                double rtng = 0;
+                foreach (Article article in Articles)
+                    rtng += ((IRateAndCopy)article).Rating;
+                return Articles.Count != 0 ? rtng / Articles.Count : 0;
             }
-
-            if (articles == null)
-            {
-                articles = Array.Empty<Article>();
-            }
-
-            int oldLength = articles.Length;
-            Array.Resize(ref articles, articles.Length + newArticles.Length);
-            Array.Copy(newArticles, 0, articles, oldLength, newArticles.Length);
         }
-
-        public override string ToString()
-            => $"Title = {Title}"
-            + $"\nFrequency = {Frequency}"
-            + $"\nPublishDate = {PublishDate}"
-            + $"\nCirculation = {Circulation}"
-            + $"\nArticles = {string.Join<Article>("\n", Articles)}";
-
+        public void AddArticles(params Article[] args) // метод void AddArticles (params Article[]) для добавления элементов в список статей в журнале
+        {
+            Articles.AddRange(args);
+        }
+        public ArrayList ListOfEditors => Editors; // свойство типа System.Collections.ArrayList для доступа к списку редакторов журнала
+        public void AddEditors(params Person[] args) // метод void AddEditors (params Person[]) для добавления элементов в список редакторов
+        {
+            Editors.AddRange(args);
+        }
+        public override string ToString() // перегруженная версия виртуального метода string ToString() для формирования строки со значениями всех полей класса, включая список статей и список редакторов
+        {
+            string articles = "";
+            foreach (Article article in Articles)
+                articles += "\n" + article.GetSetTitle;
+            string editors = "";
+            foreach (Person editor in Editors)
+                editors += "\n" + editor.GetFirstName + " " + editor.GetLastName;
+            return String.Format("Edition name is: {0}\nPeriod: {1}\nRelease date: {2}\nEdition count: {3}\nArticles: {4}\nEditors: {5}", editionName, period, release, count, articles, editors);
+        }
         public virtual string ToShortString()
-            => $"Title = {Title}"
-            + $"\nFrequency = {Frequency}"
-            + $"\nPublishDate = {PublishDate}"
-            + $"\nCirculation = {Circulation}"
-            + $"\nAvg Top = {GetAvgTop()}";
-
-    }
-    interface IRateAndCopy
-    { 
-        double Top { get;}
-        object DeepCopy();
+        {
+            return String.Format("Edition name is: {0}\nPeriod: {1}\nRelease date: {2}\nEdition count: {3}\nAverage rating: {4}", editionName, period, release, count, SrRating);
+        }
+        public override object DeepCopy() // перегруженная (override) версия виртуального метода object DeepCopy()
+        {
+            Magazine magazine = new Magazine(editionName, period, release, count);
+            magazine.Editors = Editors;
+            magazine.Articles = Articles;
+            return magazine;
+        }
+        double IRateAndCopy.Rating // реализовать интерфейс IRateAndCopy
+        {
+            get
+            {
+                return magazineRating;
+            }
+        }
+        public Edition GetSetEditionType // свойство типа Edition; метод get свойства возвращает объект типа Edition, данные которого совпадают с данными подобъекта базового класса, метод set присваивает значения полям из подобъекта базового класса
+        {
+            get
+            {
+                return new Edition(editionName, release, count);
+            }
+            set
+            {
+                editionName = value.GetSetEditionName;
+                release = value.GetSetRelease;
+                count = value.GetSetCount;
+            }
+        }
+        public IEnumerable<Article> HigherRating(double rating) // итератор с параметром типа double для перебора статей с рейтингом больше некоторого заданного значения
+        {
+            foreach (Article article in Articles)
+                if (((IRateAndCopy)article).Rating > rating)
+                    yield return article;
+        }
+        public IEnumerable<Article> SubstrArticle(string subStr) // итератор с параметром типа string для перебора статей, в названии которых есть заданная строка
+        {
+            foreach (Article article in Articles)
+                if (article.GetSetTitle.Contains(subStr))
+                    yield return article;
+        } 
+ 
     }
 }
